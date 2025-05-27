@@ -1,53 +1,29 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Nos Produits</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <header>
-    <h1>Notre Collection</h1>
-    <nav>
-      <a href="index.html">Accueil</a>
-      <a href="produits.html">Produits</a>
-    </nav>
-  </header>
+<script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+<script>
+  async function loadProducts() {
+    const container = document.getElementById('products-container');
+    const converter = new showdown.Converter();
 
-  <main id="products-container">
-    <p>Chargement des produits...</p>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Golden Shop</p>
-  </footer>
-
-  <!-- Script simple pour charger les produits -->
-  <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
-  <script>
-    async function loadProducts() {
-      const container = document.getElementById('products-container');
-      const files = ["blazer.md"]; // Liste manuelle pour l'instant
-
-      const converter = new showdown.Converter();
+    try {
+      const res = await fetch("/.netlify/functions/liste-produits");
+      const files = await res.json();
 
       container.innerHTML = "";
 
       for (let file of files) {
-        try {
-          const res = await fetch(`/produits/${file}`);
-          const text = await res.text();
-          const html = converter.makeHtml(text);
-          const div = document.createElement("div");
-          div.innerHTML = html;
-          container.appendChild(div);
-        } catch (e) {
-          console.error("Erreur produit :", file, e);
-        }
+        const res = await fetch(`./produits/${file}`);
+        const text = await res.text();
+        const html = converter.makeHtml(text);
+        const div = document.createElement("div");
+        div.className = "product";
+        div.innerHTML = html;
+        container.appendChild(div);
       }
+    } catch (err) {
+      container.innerHTML = "<p>Erreur de chargement des produits.</p>";
+      console.error(err);
     }
+  }
 
-    loadProducts();
-  </script>
-</body>
-</html>
+  loadProducts();
+</script>
