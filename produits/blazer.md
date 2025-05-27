@@ -2,7 +2,7 @@
 title: Blazer Orné
 prix: 35€
 description: Blazer élégant en soie avec broderies dorées.
-image: /uploads/screenshot_20250526_085714_whatsapp.jpg
+image: screenshot_20250526_085714_whatsapp.jpg
 ---
 
 ## Blazer Orné
