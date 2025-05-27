@@ -1,16 +1,14 @@
 <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
 <script>
+  const files = ["blazer.md"]; // Ajoute ici tous tes fichiers .md
+
   async function loadProducts() {
     const container = document.getElementById('products-container');
     const converter = new showdown.Converter();
+    container.innerHTML = "";
 
-    try {
-      const res = await fetch("/.netlify/functions/liste-produits");
-      const files = await res.json();
-
-      container.innerHTML = "";
-
-      for (let file of files) {
+    for (let file of files) {
+      try {
         const res = await fetch(`./produits/${file}`);
         const text = await res.text();
         const html = converter.makeHtml(text);
@@ -18,10 +16,9 @@
         div.className = "product";
         div.innerHTML = html;
         container.appendChild(div);
+      } catch (err) {
+        console.error("Erreur chargement fichier :", file, err);
       }
-    } catch (err) {
-      container.innerHTML = "<p>Erreur de chargement des produits.</p>";
-      console.error(err);
     }
   }
 
